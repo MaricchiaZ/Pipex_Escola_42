@@ -25,7 +25,7 @@ A saída do comando1, em vez de ir para o terminal, é encaminhada para a entrad
 
 ```
 file1 -> stdin(0) -> comando 1  | comando 2 -> stdout(1) -> file2
-	                       |			|
+                           |           |
                         stdout(1) -> stdin(0)
 ```
 
