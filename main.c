@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/19 20:27:27 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/20 16:27:48 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,3 +22,13 @@ int	main(int argc, char **argv)
 		return (-1);
 	return (0);
 }
+
+/*
+#include <stdlib.h> 
+
+    int main (int argc, char* argv[]) 
+    { 
+       system("mkdir NomePasta");
+       return 0;
+    }
+*/
