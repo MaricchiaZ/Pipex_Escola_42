@@ -1,21 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/19 19:46:08 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/19 20:00:33 by maclara-         ###   ########.fr       */
+/*   Created: 2022/08/31 01:58:14 by maclara-          #+#    #+#             */
+/*   Updated: 2022/12/21 00:33:23 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	init_struct_args(t_arg *args)
+size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
-	args->file_in = ft_strdup("");
-	args->cmd1 = ft_strdup("");
-	args->cmd2 = ft_strdup("");
-	args->file_out = ft_strdup("");
+	size_t	i;
+	size_t	len_src;
+
+	i = 0;
+	len_src = 0;
+	while (src[len_src] != '\0')
+		len_src++;
+	if (size != 0)
+	{
+		while (src[i] != '\0' && i < (size - 1))
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	return (len_src);
 }

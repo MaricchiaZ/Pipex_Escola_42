@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:40:51 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/19 20:41:10 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/20 23:47:43 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int save_arguments(char **argv, t_px *pipex)
 	printf("cmd2: %s\n", pipex->args.cmd2);
 	printf("file_out: %s\n", pipex->args.file_out);
 	
-	if (!pipex->args.file_in || pipex->args.file_out || \
-	pipex->args.cmd1 || pipex->args.cmd2)
+	if (!pipex->args.file_in || !pipex->args.file_out || \
+	!pipex->args.cmd1 || !pipex->args.cmd2)
 		return (0);
 	return (1);
 }

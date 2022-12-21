@@ -29,6 +29,14 @@ file1 -> stdin(0) -> comando 1  | comando 2 -> stdout(1) -> file2
                       stdout(1) -> stdin(0)
 ```
 
+### Entendendo os conceitos
+múltiplas threads:
+múltiplos processos:
+Diferença entre processo e threads:
+
+Função fork: ela duplica a linha de execução.... tudo o que for executado depois dela, será executado 2 vezes
+
+
 
 
 

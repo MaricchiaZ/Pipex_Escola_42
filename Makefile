@@ -12,10 +12,14 @@ PATH_OBJS	= ./objs/
 
 SRCS	= ./main.c \
 		./check.c \
-		./init.c \
+		./init_free.c \
+		./open.c \
 		$(PATH_UTILS)ft_strdup.c \
 		$(PATH_UTILS)ft_strjoin.c \
 		$(PATH_UTILS)ft_strlen.c \
+		$(PATH_UTILS)ft_split.c \
+		$(PATH_UTILS)ft_substr.c \
+		$(PATH_UTILS)ft_strlcpy.c \
 
 OBJS	= $(patsubst $(PATH_SRCS)%.c, $(PATH_OBJS)%.o, $(SRCS))
 
