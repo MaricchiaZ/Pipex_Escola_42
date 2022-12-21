@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 00:50:48 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/21 01:11:04 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <fcntl.h> // open
 # include <stdio.h> // RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * 
 
-# define PATH "/usr/local/sbin/::/usr/local/bin/:/usr/sbin/:/usr/bin/:/sbin:/bin/"
+# define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin/"
 
 typedef struct s_arguments
 {

@@ -6,11 +6,182 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 00:54:16 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/21 01:23:57 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+#include "pipex.h"
+
+char	*my_path_join(char const *s1, char const *s2)
+{
+	char	*s;
+	int		count;
+	int		count2;
+
+	count = 0;
+	count2 = 0;
+	s = malloc ((ft_strlen(s1) + ft_strlen(s2) + 2) * sizeof(char));
+	if (s == NULL)
+		return (NULL);
+	while (s1[count] != '\0')
+	{
+		s[count] = s1[count];
+		count++;
+	}
+	s[count++] = '/';
+	while (s2[count2] != '\0')
+		s[count++] = s2[count2++];
+	s[count] = '\0';
+	return (s);
+}
+
+char	*get_path(t_px pipex, char **env)
+{
+	int		i;
+	char	*line;
+	char	**check;
+	char	*path;
+
+	i = 0;
+	while (env[i][0] != 'P' || env[i][1] != 'A'
+			|| env[i][2] != 'T' || env[i][3] != 'H')
+		i++;
+	line = env[i] + 5;
+	check = ft_split(line, ':');
+	i = 0;
+	while (check[i] != NULL)
+	{
+		path = my_path_join(check[i], pipex.args.cmd1);
+		if (access(path, F_OK | X_OK) == 0)
+		{
+			return (path);
+		}
+		free(path);
+		i++;
+	}
+	exit (127);
+}
+
+static int	get_cmd_count(char *s)
+{
+	int		i;
+	int		n;
+	char	c;
+
+	n = 0;
+	i = 0;
+	while (s[i] != '\0')
+	{
+		while (s[i] == ' ')
+			i++;
+		if ((s[i] == '\'' || s[i] == '\"') && s[i + 1] != '\0')
+		{
+			c = s[i];
+			i++;
+			while (s[i] != c && s[i + 1] != '\0')
+				i++;
+			n++;
+		}
+		else if (s[i] != ' ' && (s[i + 1] == ' ' || s[i + 1] == '\0'))
+			n++;
+		i++;
+	}
+	return (n);
+}
+
+static void	my_cmd_split(char	*s, char **matriz, int n, int strcount)
+{
+	int	start;
+
+	start = 0;
+	while (s[n] != '\0')
+	{
+		while (s[n] == ' ')
+			n++;
+		start = n;
+		if (s[n] == '\'' || s[n] == '\"')
+		{
+			n++;
+			start++;
+			while (s[n] != s[start - 1] && s[n] != '\0')
+				n++;
+			matriz[strcount++] = ft_substr(s, start, n - start);
+			if (s[n] == s[start - 1])
+				n++;
+		}
+		else
+		{
+			while (s[n] != ' ' && s[n] != '\0')
+				n++;
+			matriz[strcount++] = ft_substr(s, start, n - start);
+		}
+	}
+}
+
+char	**get_cmd(char *s)
+{
+	char	**ret;
+	int		n;
+	int		strcount;
+
+	ret = (char **) malloc (sizeof(char *) * (get_cmd_count(s) + 1));
+	if (ret == NULL)
+		return (NULL);
+	n = 0;
+	strcount = 0;
+	my_cmd_split(s, ret, n, strcount);
+	ret[get_cmd_count(s)] = NULL;
+	return (ret);
+}
+
+void	child_cmd(t_px pipex, char **env)
+{
+	char *path;
+	
+	close(pipex.s_fd[0]);
+	pipex.exv = get_cmd(pipex.args.cmd1);
+	dup2(pipex.s_fd[1], 1);
+	pipex.exv = get_cmd(pipex.args.cmd1);
+	path = get_path(pipex, env);
+	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
+}
+
+void	parent_cmd(t_px pipex, char **env)
+{
+	char *path;
+	
+	close(pipex.s_fd[1]);
+	dup2(pipex.s_fd[0], 0);
+	pipex.exv = get_cmd(pipex.args.cmd2);
+	path = get_path(pipex, env);
+	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_px	pipex;
+	int		process_id;
+	
+	if (check_arguments(argc) == 0)
+		return (-1);
+	if (save_arguments(argv, &pipex) == 0)
+		return (-1);
+	open_file(&pipex);
+	dup2(pipex.fd_out, 1);
+	dup2(pipex.fd_in, 0);
+	if (pipe(pipex.s_fd) == -1)
+		return (-1);
+	process_id = fork();
+	if (process_id == 0)
+		child_cmd(pipex, env);
+	else
+		parent_cmd(pipex, env);
+	return (0);
+}
+
+/*
 
 void	child_cmd(t_px pipex, char **env)
 {
@@ -57,6 +228,7 @@ int	main(int argc, char **argv, char **env)
 		parent_cmd(pipex, env);
 	return (0);
 }
+*/
 
 /*
 #include <stdlib.h> 
