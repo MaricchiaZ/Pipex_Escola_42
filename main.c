@@ -6,11 +6,9 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 01:23:57 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/21 01:50:34 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "pipex.h"
 
 #include "pipex.h"
 
@@ -37,31 +35,31 @@ char	*my_path_join(char const *s1, char const *s2)
 	return (s);
 }
 
-char	*get_path(t_px pipex, char **env)
+char    *get_path(char **env, char *cmd)
 {
-	int		i;
-	char	*line;
-	char	**check;
-	char	*path;
+    int        i;
+    char    *line;
+    char    **check;
+    char    *path;
 
-	i = 0;
-	while (env[i][0] != 'P' || env[i][1] != 'A'
-			|| env[i][2] != 'T' || env[i][3] != 'H')
-		i++;
-	line = env[i] + 5;
-	check = ft_split(line, ':');
-	i = 0;
-	while (check[i] != NULL)
-	{
-		path = my_path_join(check[i], pipex.args.cmd1);
-		if (access(path, F_OK | X_OK) == 0)
-		{
-			return (path);
-		}
-		free(path);
-		i++;
-	}
-	exit (127);
+    i = 0;
+    while (env[i][0] != 'P' || env[i][1] != 'A'
+            || env[i][2] != 'T' || env[i][3] != 'H')
+        i++;
+    line = env[i] + 5;
+    check = ft_split(line, ':');
+    i = 0;
+    while (check[i] != NULL)
+    {
+        path = my_path_join(check[i], ft_split(cmd, ' ')[0]);
+        if (access(path, F_OK | X_OK) == 0)
+        {
+            return (path);
+        }
+        free(path);
+        i++;
+    }
+    exit (127);
 }
 
 static int	get_cmd_count(char *s)
@@ -141,10 +139,9 @@ void	child_cmd(t_px pipex, char **env)
 	char *path;
 	
 	close(pipex.s_fd[0]);
-	pipex.exv = get_cmd(pipex.args.cmd1);
 	dup2(pipex.s_fd[1], 1);
 	pipex.exv = get_cmd(pipex.args.cmd1);
-	path = get_path(pipex, env);
+	path = get_path(env, pipex.args.cmd1);
 	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
 }
 
@@ -153,9 +150,9 @@ void	parent_cmd(t_px pipex, char **env)
 	char *path;
 	
 	close(pipex.s_fd[1]);
-	dup2(pipex.s_fd[0], 0);
 	pipex.exv = get_cmd(pipex.args.cmd2);
-	path = get_path(pipex, env);
+	dup2(pipex.s_fd[0], 0);
+	path = get_path(env, pipex.args.cmd2);
 	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
 }
 
