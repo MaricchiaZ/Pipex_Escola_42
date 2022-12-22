@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 22:20:17 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 12:01:56 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,9 @@ void	child_cmd(t_px pipex, char **env)
 {
 	char *path;
 	
-	close(pipex.pipefd[0]);
-	dup2(pipex.pipefd[1], 1);
+	close(pipex.pipefd[0]); // sempre feche a extremidade do pipe que voce não usa, se ficar aberta a outra extremidade ficará aguardando algum tipo de entrada e o processo não se finalizará
+	dup2(pipex.pipefd[1], 1); // a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
+	// a dup2 fecha o stdin (1), e o pipefd[1] torna-se o novo stdin
 	pipex.mtx_cmd = get_cmd(pipex.args.cmd1); // ls -l | wc
 	path = get_path(env, pipex.args.cmd1);
 	execve(path, pipex.mtx_cmd, env); // 	execve(pipex->path, pipex->mtx_cmd, env);

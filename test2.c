@@ -1,7 +1,7 @@
 
 # include <unistd.h> // para usar a função fork, read, close
 # include <stdlib.h>
-# include <fcntl.h> // open
+//# include <fcntl.h> // open
 # include <stdio.h> // fflush
 # include <string.h>
 # include <time.h>
@@ -9,13 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    int arr[] = {1, 2, 3, 4, 1, 2};
     int fd[2];
-    if (pipe[fd] == -1)
-    {
-        printf("Error pipe function\n");
-        return (1);
-    }
     //fd[0] = read
     //fd[1] = write
     if(pipe(fd) == -1)
@@ -29,7 +23,7 @@ int main(int argc, char *argv[])
         close(fd[0]); //fechamos clone do fd[0] que será usado pelo processo pai
         int x;
         printf("Input a number: "); // pedimos um número e armazenar no int x
-        scanf("%d", &x);
+        scanf("%d", &x); 
         write(fd[1], &x, sizeof(int)); // escrevemos esse número no fd[1]...
         close(fd[1]);// e fechamos o fd1
     }
@@ -49,4 +43,4 @@ int main(int argc, char *argv[])
 //  gcc test2.c
 //  ./a.out
 
-// x -> fd[1] -> fd[0] -> y
+

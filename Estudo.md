@@ -46,11 +46,18 @@ Sabendo o ID, pode-se pedir para cada processo executar uma função diferente, 
 
 `Função wait`: possibilita esperar o processo filho acabar para então executar o processo pai/main. Isso evita que os eventos ocorram simultâneamente, evitando que funções que imprimam coisas no terminal misturem a saída
 
-`Função pipe`: cria um canal de dados unidirecional que pode ser usado para comunicação entre os processos. A função pipe pede uma matriz de ints de 2 posições (int pipefd[2]). Essa matriz é usada para retornar dois descritores de arquivo referentes às extremidades do pipe. O pipefd[0] refere-se à extremidade lida e o pipefd[1] refere-se à extremidade de gravação do pipe. Os dados gravados na extremidade de gravação do pipe são armazenados em buffer pelo kernel até serem lidos na extremidade de leitura do pipe.
+`Função pipe`: faz a comunicação entre os dois processos gerados pelo fork.
+A função pipe cria um canal de dados unidirecional que pode ser usado para comunicação entre os processos. A função pipe pede uma matriz de ints de 2 posições (int pipefd[2]). Essa matriz é usada para retornar dois descritores de arquivo referentes às extremidades do pipe. O pipefd[0] refere-se à extremidade lida e o pipefd[1] refere-se à extremidade de gravação do pipe. Os dados gravados na extremidade de gravação do pipe são armazenados em buffer pelo kernel até serem lidos na extremidade de leitura do pipe.
 pipefd[0] = é lido (O que tiver no pipefd[0] pode ser lido pelo pipefd[1 ])
 pipefd[1] = é escrito.
 `Retorno da função pipe`:Em caso de sucesso, zero é retornado. Em caso de erro, -1 é retornado, errno é definido para indicar o erro e o pipefd permanece inalterado. 
 
+`Função dup e dup2`: a função dup `int dup(int old_fd)` duplica em um novo descritor de arquivo o que tinha no descritor de arquivo aberto antigo (old_fd) já aberto.O novo número do descritor de arquivo é garantido como o de menor número descritor de arquivo ainda não utilizado .
+A função dup2 `int dup2(int old_fd, int new_fd)`executa a mesma tarefa que dup (), mas
+em vez de usar o descritor de arquivo não utilizado de menor número, ela usa o número do descritor de arquivo especificado em new_fd . Em outras palavras, o descritor de arquivo new_fd recebe uma duplicata do que havia no old_fd .
+O interesse do uso da dup2 nesse projeto se dá porque ela pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1
+a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
+a dup2 fecha o stdin (1), e o pipefd[1] torna-se o novo stdin
 
 
 
