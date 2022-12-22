@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 01:50:34 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/21 22:20:17 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*my_path_join(char const *s1, char const *s2)
 	int		count;
 	int		count2;
 
-	count = 0;
+	count = 0; 
 	count2 = 0;
 	s = malloc ((ft_strlen(s1) + ft_strlen(s2) + 2) * sizeof(char));
 	if (s == NULL)
@@ -44,18 +44,22 @@ char    *get_path(char **env, char *cmd)
 
     i = 0;
     while (env[i][0] != 'P' || env[i][1] != 'A'
-            || env[i][2] != 'T' || env[i][3] != 'H')
+            || env[i][2] != 'T' || env[i][3] != 'H'|| env[i][4] != '=')
         i++;
     line = env[i] + 5;
     check = ft_split(line, ':');
     i = 0;
     while (check[i] != NULL)
     {
+		// /usr/local/sbin
+		// /usr/local/bin
+		// /usr/sbin
+		// /usr/bin
+		// /sbin
+		// /bin/
         path = my_path_join(check[i], ft_split(cmd, ' ')[0]);
         if (access(path, F_OK | X_OK) == 0)
-        {
             return (path);
-        }
         free(path);
         i++;
     }
@@ -70,7 +74,7 @@ static int	get_cmd_count(char *s)
 
 	n = 0;
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i] != '\0') //     "   tr 'c' e"
 	{
 		while (s[i] == ' ')
 			i++;
@@ -99,7 +103,7 @@ static void	my_cmd_split(char	*s, char **matriz, int n, int strcount)
 		while (s[n] == ' ')
 			n++;
 		start = n;
-		if (s[n] == '\'' || s[n] == '\"')
+		if (s[n] == '\'' || s[n] == '\"') //  "   tr 'c' e"
 		{
 			n++;
 			start++;
@@ -138,22 +142,22 @@ void	child_cmd(t_px pipex, char **env)
 {
 	char *path;
 	
-	close(pipex.s_fd[0]);
-	dup2(pipex.s_fd[1], 1);
-	pipex.exv = get_cmd(pipex.args.cmd1);
+	close(pipex.pipefd[0]);
+	dup2(pipex.pipefd[1], 1);
+	pipex.mtx_cmd = get_cmd(pipex.args.cmd1); // ls -l | wc
 	path = get_path(env, pipex.args.cmd1);
-	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
+	execve(path, pipex.mtx_cmd, env); // 	execve(pipex->path, pipex->mtx_cmd, env);
 }
 
 void	parent_cmd(t_px pipex, char **env)
 {
 	char *path;
 	
-	close(pipex.s_fd[1]);
-	pipex.exv = get_cmd(pipex.args.cmd2);
-	dup2(pipex.s_fd[0], 0);
+	close(pipex.pipefd[1]);
+	pipex.mtx_cmd = get_cmd(pipex.args.cmd2);
+	dup2(pipex.pipefd[0], 0);
 	path = get_path(env, pipex.args.cmd2);
-	execve(path, pipex.exv, env); // 	execve(pipex->path, pipex->exv, env);
+	execve(path, pipex.mtx_cmd, env); // 	execve(pipex->path, pipex->mtx_cmd, env);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -168,7 +172,7 @@ int	main(int argc, char **argv, char **env)
 	open_file(&pipex);
 	dup2(pipex.fd_out, 1);
 	dup2(pipex.fd_in, 0);
-	if (pipe(pipex.s_fd) == -1)
+	if (pipe(pipex.pipefd) == -1)
 		return (-1);
 	process_id = fork();
 	if (process_id == 0)

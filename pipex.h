@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 01:11:04 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/21 22:19:57 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,16 @@
 
 # include <unistd.h> // para usar a função fork, read, close
 # include <stdlib.h>
-# include <fcntl.h> // open
+# include <fcntl.h> // open, pipe
 # include <stdio.h> // RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * 
 
 # define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin/"
+/usr/local/sbin
+/usr/local/bin
+/usr/sbin
+/usr/bin
+/sbin
+/bin/
 
 typedef struct s_arguments
 {
@@ -32,8 +38,8 @@ typedef struct s_pipex
 {
 	int		fd_in;
 	int		fd_out;
-	char	**exv;
-	int		s_fd[2];
+	char	**mtx_cmd;
+	int		pipefd[2];
 	char	*path_cmd;
 	char	*cmd;
 	t_arg	args;
