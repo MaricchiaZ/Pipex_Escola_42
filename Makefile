@@ -14,6 +14,8 @@ SRCS	= ./main.c \
 		./check.c \
 		./init_free.c \
 		./open.c \
+		./path.c \
+		./cmd.c \
 		$(PATH_UTILS)ft_strdup.c \
 		$(PATH_UTILS)ft_strjoin.c \
 		$(PATH_UTILS)ft_strlen.c \

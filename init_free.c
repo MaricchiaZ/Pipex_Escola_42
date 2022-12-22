@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 19:46:08 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 01:27:00 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 16:53:28 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	free_pipex(t_px *pipex)
 		free(pipex->args.file_out);
 //	if (pipex->exv)
 //		free_matrix(pipex->exv);
-	if (pipex->path_cmd)
-		free(pipex->path_cmd);
-	if (pipex->cmd)
-		free(pipex->cmd);
+	// if (pipex->path_cmd)
+	// 	free(pipex->path_cmd);
+	// if (pipex->cmd)
+	// 	free(pipex->cmd);
 }

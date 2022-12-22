@@ -54,10 +54,10 @@ pipefd[1] = é escrito.
 
 `Função dup e dup2`: a função dup `int dup(int old_fd)` duplica em um novo descritor de arquivo o que tinha no descritor de arquivo aberto antigo (old_fd) já aberto.O novo número do descritor de arquivo é garantido como o de menor número descritor de arquivo ainda não utilizado .
 A função dup2 `int dup2(int old_fd, int new_fd)`executa a mesma tarefa que dup (), mas
-em vez de usar o descritor de arquivo não utilizado de menor número, ela usa o número do descritor de arquivo especificado em new_fd . Em outras palavras, o descritor de arquivo new_fd recebe uma duplicata do que havia no old_fd .
-O interesse do uso da dup2 nesse projeto se dá porque ela pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1
-a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
-a dup2 fecha o stdin (1), e o pipefd[1] torna-se o novo stdin
+em vez de usar o descritor de arquivo não utilizado de menor número, ela usa o número do descritor de arquivo especificado em new_fd. Em outras palavras, o descritor de arquivo new_fd recebe uma duplicata do que havia no old_fd .
+O interesse do uso da dup2 nesse projeto se dá porque ela pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
+NO PROCESSO FILHO:
+a dup2 fecha o stdout(1), e o pipefd[1] torna-se o novo stdout... ou seja o comando1 não vai mais mandar as infos do terminal, mas sim do pipefd[1] 
 
 
 

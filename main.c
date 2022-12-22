@@ -6,137 +6,11 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/22 12:01:56 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 18:28:36 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-char	*my_path_join(char const *s1, char const *s2)
-{
-	char	*s;
-	int		count;
-	int		count2;
-
-	count = 0; 
-	count2 = 0;
-	s = malloc ((ft_strlen(s1) + ft_strlen(s2) + 2) * sizeof(char));
-	if (s == NULL)
-		return (NULL);
-	while (s1[count] != '\0')
-	{
-		s[count] = s1[count];
-		count++;
-	}
-	s[count++] = '/';
-	while (s2[count2] != '\0')
-		s[count++] = s2[count2++];
-	s[count] = '\0';
-	return (s);
-}
-
-char    *get_path(char **env, char *cmd)
-{
-    int        i;
-    char    *line;
-    char    **check;
-    char    *path;
-
-    i = 0;
-    while (env[i][0] != 'P' || env[i][1] != 'A'
-            || env[i][2] != 'T' || env[i][3] != 'H'|| env[i][4] != '=')
-        i++;
-    line = env[i] + 5;
-    check = ft_split(line, ':');
-    i = 0;
-    while (check[i] != NULL)
-    {
-		// /usr/local/sbin
-		// /usr/local/bin
-		// /usr/sbin
-		// /usr/bin
-		// /sbin
-		// /bin/
-        path = my_path_join(check[i], ft_split(cmd, ' ')[0]);
-        if (access(path, F_OK | X_OK) == 0)
-            return (path);
-        free(path);
-        i++;
-    }
-    exit (127);
-}
-
-static int	get_cmd_count(char *s)
-{
-	int		i;
-	int		n;
-	char	c;
-
-	n = 0;
-	i = 0;
-	while (s[i] != '\0') //     "   tr 'c' e"
-	{
-		while (s[i] == ' ')
-			i++;
-		if ((s[i] == '\'' || s[i] == '\"') && s[i + 1] != '\0')
-		{
-			c = s[i];
-			i++;
-			while (s[i] != c && s[i + 1] != '\0')
-				i++;
-			n++;
-		}
-		else if (s[i] != ' ' && (s[i + 1] == ' ' || s[i + 1] == '\0'))
-			n++;
-		i++;
-	}
-	return (n);
-}
-
-static void	my_cmd_split(char	*s, char **matriz, int n, int strcount)
-{
-	int	start;
-
-	start = 0;
-	while (s[n] != '\0')
-	{
-		while (s[n] == ' ')
-			n++;
-		start = n;
-		if (s[n] == '\'' || s[n] == '\"') //  "   tr 'c' e"
-		{
-			n++;
-			start++;
-			while (s[n] != s[start - 1] && s[n] != '\0')
-				n++;
-			matriz[strcount++] = ft_substr(s, start, n - start);
-			if (s[n] == s[start - 1])
-				n++;
-		}
-		else
-		{
-			while (s[n] != ' ' && s[n] != '\0')
-				n++;
-			matriz[strcount++] = ft_substr(s, start, n - start);
-		}
-	}
-}
-
-char	**get_cmd(char *s)
-{
-	char	**ret;
-	int		n;
-	int		strcount;
-
-	ret = (char **) malloc (sizeof(char *) * (get_cmd_count(s) + 1));
-	if (ret == NULL)
-		return (NULL);
-	n = 0;
-	strcount = 0;
-	my_cmd_split(s, ret, n, strcount);
-	ret[get_cmd_count(s)] = NULL;
-	return (ret);
-}
 
 void	child_cmd(t_px pipex, char **env)
 {
@@ -144,19 +18,20 @@ void	child_cmd(t_px pipex, char **env)
 	
 	close(pipex.pipefd[0]); // sempre feche a extremidade do pipe que voce não usa, se ficar aberta a outra extremidade ficará aguardando algum tipo de entrada e o processo não se finalizará
 	dup2(pipex.pipefd[1], 1); // a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
-	// a dup2 fecha o stdin (1), e o pipefd[1] torna-se o novo stdin
+	// a dup2 fecha o stdout (1), e o pipefd[1] torna-se o novo stdin
 	pipex.mtx_cmd = get_cmd(pipex.args.cmd1); // ls -l | wc
-	path = get_path(env, pipex.args.cmd1);
-	execve(path, pipex.mtx_cmd, env); // 	execve(pipex->path, pipex->mtx_cmd, env);
+	path = get_path(env, pipex.args.cmd1); // pegamos o caminho 
+	execve(path, pipex.mtx_cmd, env); // executamos o comando, no caminho, sobre o fd_in e o resultado vai para o fd_out\
 }
 
 void	parent_cmd(t_px pipex, char **env)
 {
 	char *path;
 	
-	close(pipex.pipefd[1]);
+	close(pipex.pipefd[1]); // sempre feche a extremidade do pipe que voce não usa, se ficar aberta a outra extremidade ficará aguardando algum tipo de entrada e o processo não se finalizará
 	pipex.mtx_cmd = get_cmd(pipex.args.cmd2);
-	dup2(pipex.pipefd[0], 0);
+	dup2(pipex.pipefd[0], 0); // a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
+	// a dup2 fecha o stdin (0), e o pipefd[0] torna-se o novo stdin, agora essa função vai receber os valores do arquivo 1 e não do terminal
 	path = get_path(env, pipex.args.cmd2);
 	execve(path, pipex.mtx_cmd, env); // 	execve(pipex->path, pipex->mtx_cmd, env);
 }
@@ -166,11 +41,11 @@ int	main(int argc, char **argv, char **env)
 	t_px	pipex;
 	int		process_id;
 	
-	if (check_arguments(argc) == 0)
+	if (check_arguments(argc) == 0) // checa se o número de args é 5
 		return (-1);
-	if (save_arguments(argv, &pipex) == 0)
+	if (save_arguments(argv, &pipex) == 0) // salva os argumentos numa struct
 		return (-1);
-	open_file(&pipex);
+	open_file(&pipex); //
 	dup2(pipex.fd_out, 1);
 	dup2(pipex.fd_in, 0);
 	if (pipe(pipex.pipefd) == -1)
@@ -182,62 +57,3 @@ int	main(int argc, char **argv, char **env)
 		parent_cmd(pipex, env);
 	return (0);
 }
-
-/*
-
-void	child_cmd(t_px pipex, char **env)
-{
-	char	**split;
-
-	split = ft_split(pipex.args.cmd1, ' ');
-	close(pipex.s_fd[0]);
-	dup2(pipex.s_fd[1], 1);
-//	pipex->cmd = FUNC PEGA COMANDO(pipex->args.cmd1);
-//	pipex->path = FUNC PEGA CAMINHO(pipex, env)
-	execve(PATH, split, env); // 	execve(pipex->path, pipex->cmd, env);
-}
-
-void	parent_cmd(t_px pipex, char **env)
-{
-	char	**split;
-
-	split = ft_split(pipex.args.cmd2, ' ');
-	close(pipex.s_fd[1]);
-	dup2(pipex.s_fd[0], 0);
-//	pipex->cmd = FUNC PEGA COMANDO(pipex->args.cmd2);
-//	pipex->path = FUNC PEGA CAMINHO(pipex, env)
-	execve(PATH, split, env); // 	execve(pipex->path, pipex->cmd, env);
-}
-
-int	main(int argc, char **argv, char **env)
-{
-	t_px	pipex;
-	int		process_id;
-	
-	if (check_arguments(argc) == 0)
-		return (-1);
-	if (save_arguments(argv, &pipex) == 0)
-		return (-1);
-	open_file(&pipex);
-	dup2(pipex.fd_out, 1);
-	dup2(pipex.fd_in, 0);
-	if (pipe(pipex.s_fd) == -1)
-		return (-1);
-	process_id = fork();
-	if (process_id == 0)
-		child_cmd(pipex, env);
-	else
-		parent_cmd(pipex, env);
-	return (0);
-}
-*/
-
-/*
-#include <stdlib.h> 
-
-    int main (int argc, char* argv[]) 
-    { 
-       system("mkdir NomePasta");
-       return 0;
-    }
-*/

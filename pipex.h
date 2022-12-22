@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/21 22:19:57 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 18:14:34 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,15 @@
 # include <unistd.h> // para usar a função fork, read, close
 # include <stdlib.h>
 # include <fcntl.h> // open, pipe
-# include <stdio.h> // RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * 
+//# include <stdio.h> // RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * 
 
-# define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin/"
-/usr/local/sbin
-/usr/local/bin
-/usr/sbin
-/usr/bin
-/sbin
-/bin/
-
+// armazena os argumentos passados por parâmetros
 typedef struct s_arguments
 {
-	char	*file_in;
-	char	*cmd1;
-	char	*cmd2;
-	char	*file_out;
+	char	*file_in; // 2o arg
+	char	*cmd1; // 3o arg
+	char	*cmd2; // 4o arg
+	char	*file_out; // 5o arg
 }	t_arg;
 
 typedef struct s_pipex
@@ -65,5 +58,15 @@ void	open_file(t_px *pipex);
 void	free_matrix(t_px *pipex);
 void	free_pipex(t_px *pipex);
 
+// path.c
+char	*my_path_join(char const *s1, char const *s2);
+char    *get_path(char **env, char *cmd);
+
+// cmd.c
+char	**get_cmd(char *s);
+
+// main.c
+void	child_cmd(t_px pipex, char **env);
+void	parent_cmd(t_px pipex, char **env);
 
 #endif
