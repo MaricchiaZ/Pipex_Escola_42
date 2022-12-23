@@ -63,8 +63,10 @@ a dup2 fecha o stdout(1), e o pipefd[1] torna-se o novo stdout... ou seja o coma
 A família de funções exec permite o lançamento da execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução.
 Existem seis funções primitivas na família, as quais podem ser divididas em dois grupos: os execl(), para o qual o número de argumentos do programa lançado é conhecido; e os execv(), para o qual esse número é desconhecido. Em outras palavras, estes grupos  se diferenciam pelo número de parâmetros passados.
 
+`Argumento env` passado por parâmetro para a main: env é um vetor de strings (char *env) na forma "nome=valor" que contém as `variáveis de ambiente` do shell que lançou a execução do programa (também finalizado por um ponteiro nulo). As variáveis de ambiente são cadeias de caracteres que contêm informações sobre o ambiente do sistema e sobre o usuário que está no momento conectado. Alguns programas de software usam as informações para determinar onde colocar arquivos (como por exemplo, os arquivos temporários).
+Uma variável de ambiente é um atalho (chamemos assim) para um valor que neste caso está disponível no ambiente de execução (neste caso no sistema operacional inteiro).
 
-`Argumento env` passado para a main: 
+`PATH`: O PATH é uma variável do sistema usada pelo sistema operacional para localizar executáveis necessários da linha de comandos ou da janela do terminal. O PATH localiza executáveis que podem ser utilizados na CLI (Command Line Interface). $PATH: é uma variável do sistema Linux que indica trajetória (òu caminho) dos binários (executáveis dos programas), que podem ser executados sem indicar o caminho completo (geralmente muito longo) de onde eles estão.
 
 
 

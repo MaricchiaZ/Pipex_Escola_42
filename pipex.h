@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/22 20:13:51 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 22:54:44 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ typedef struct s_arguments
 
 typedef struct s_pipex
 {
-	int		fd_in;
-	int		fd_out;
-	char	**mtx_cmd;
-	int		pipefd[2];
-	char	*path_cmd;
-	t_arg	args;
+	int		fd_in; //fd para o arquivo de entrada/ file_in ou file1
+	int		fd_out; //fd para o arquivo de saída/ file_out ou file2
+	char	**mtx_cmd; // vai receber o comando já passado pela split
+	int		pipefd[2]; // fd temporário usado pela função pipe que conecta dos dois processos criados pela função fork
+	char	*path_cmd; // vai receber o caminho passado por parâmetro env
+	t_arg	args; // struct args
 }	t_px;
 
 // utils.c
