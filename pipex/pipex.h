@@ -6,34 +6,33 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/23 13:20:52 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/23 14:07:24 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include <unistd.h> // para usar a função fork, read, close
-# include <stdlib.h> // malloc, free
-# include <fcntl.h> // open, pipe
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
 
-// armazena os argumentos passados por parâmetros
 typedef struct s_arguments
 {
-	char	*file_in; // 2o arg
-	char	*cmd1; // 3o arg
-	char	*cmd2; // 4o arg
-	char	*file_out; // 5o arg
+	char	*file_in;
+	char	*cmd1;
+	char	*cmd2;
+	char	*file_out;
 }	t_arg;
 
 typedef struct s_pipex
 {
-	int		fd_in; //fd para o arquivo de entrada/ file_in ou file1
-	int		fd_out; //fd para o arquivo de saída/ file_out ou file2
-	char	**mtx_cmd; // vai receber o comando já passado pela split
-	int		pipefd[2]; // fd temporário usado pela função pipe que conecta dos dois processos criados pela função fork
-	char	*path_cmd; // vai receber o caminho passado por parâmetro env
-	t_arg	args; // struct args
+	int		fd_in;
+	int		fd_out;
+	char	**mtx_cmd;
+	int		pipefd[2];
+	char	*path_cmd;
+	t_arg	args;
 }	t_px;
 
 // utils.c
@@ -55,7 +54,7 @@ void	free_pipex(t_px *pipex);
 
 // path.c
 char	*my_path_join(char const *s1, char const *s2);
-char    *get_path(char **env, char *cmd);
+char	*get_path(char **env, char *cmd);
 
 // cmd.c
 char	**get_cmd(char *s);
