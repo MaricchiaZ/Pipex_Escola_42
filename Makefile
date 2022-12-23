@@ -13,7 +13,6 @@ PATH_OBJS	= ./objs/
 SRCS	= ./main.c \
 		./check.c \
 		./init_free.c \
-		./open.c \
 		./path.c \
 		./cmd.c \
 		$(PATH_UTILS)ft_strdup.c \

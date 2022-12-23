@@ -12,14 +12,14 @@ ex: `ls | wc`
 então usando a pipe line redirecionamos a lista de arquivos para p comando contador, e teremos a quantidade de arquivos + pastas no diretório atual
 
 ### Entendendo os conceitos
-Input - é o que eu estou recebendo, é a entrada de dados, é o caminho de entrada dos dados
-StdIn (0) - é a entrada de dados do terminal, toda vez que um comando é digitado no terminal ele estamos colocando o comando no StdIn (0) (Standard input) do terminal
+`Input` - é o que eu estou recebendo, é a entrada de dados, é o caminho de entrada dos dados
+`StdIn (0)` - é a entrada padrão de dados do terminal, toda vez que um comando é digitado no terminal ele estamos colocando o comando no StdIn (0) (Standard input) do terminal
 
-Output - é o que eu estou renviando, é a saída dos dados que eu produzi, é o caminho de saída dos dados
-StdOut(1) - saída normal do terminal, tudo que aparece escrito no terminal, foi enviado para o StdOut (1) (Standard outut) do terminal
+`Output` - é o que eu estou renviando, é a saída dos dados que eu produzi, é o caminho de saída dos dados
+`StdOut(1)` - saída normal do terminal, tudo que aparece escrito no terminal, foi enviado para o StdOut (1) (Standard outut) do terminal
 
-Erro - quando algum comando é digitado errado, ou não encontrou o arquivo sobre o qual deveria rodar, essa info é enviada para uma saída pré definida para casos de erros
-Stderr (2) - saída padrão para casos de erros
+`Erro` - quando algum comando é digitado errado, ou não encontrou o arquivo sobre o qual deveria rodar, essa info é enviada para uma saída pré definida para casos de erros
+`Stderr (2)` - saída padrão para casos de erros
 
 A saída do comando1, em vez de ir para o terminal, é encaminhada para a entrada do segundo comando
 
@@ -57,7 +57,14 @@ A função dup2 `int dup2(int old_fd, int new_fd)`executa a mesma tarefa que dup
 em vez de usar o descritor de arquivo não utilizado de menor número, ela usa o número do descritor de arquivo especificado em new_fd. Em outras palavras, o descritor de arquivo new_fd recebe uma duplicata do que havia no old_fd .
 O interesse do uso da dup2 nesse projeto se dá porque ela pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
 NO PROCESSO FILHO:
-a dup2 fecha o stdout(1), e o pipefd[1] torna-se o novo stdout... ou seja o comando1 não vai mais mandar as infos do terminal, mas sim do pipefd[1] 
+a dup2 fecha o stdout(1), e o pipefd[1] torna-se o novo stdout... ou seja o comando1 não vai mais mandar as infos do terminal, mas sim do pipefd[1]
+
+`Função execv`: executa o programa referenciado pelo path. Essa função faz com que o programa que está sendo executado atualmente pelo no processo seja substituído por um novo programa, recém-inicializado. 
+A família de funções exec permite o lançamento da execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução.
+Existem seis funções primitivas na família, as quais podem ser divididas em dois grupos: os execl(), para o qual o número de argumentos do programa lançado é conhecido; e os execv(), para o qual esse número é desconhecido. Em outras palavras, estes grupos  se diferenciam pelo número de parâmetros passados.
+
+
+`Argumento env` passado para a main: 
 
 
 

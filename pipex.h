@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:36 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/22 18:14:34 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/22 20:13:51 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 # define PIPEX_H
 
 # include <unistd.h> // para usar a função fork, read, close
-# include <stdlib.h>
+# include <stdlib.h> // malloc, free
 # include <fcntl.h> // open, pipe
-//# include <stdio.h> // RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * RETIRAR * 
 
 // armazena os argumentos passados por parâmetros
 typedef struct s_arguments
@@ -34,7 +33,6 @@ typedef struct s_pipex
 	char	**mtx_cmd;
 	int		pipefd[2];
 	char	*path_cmd;
-	char	*cmd;
 	t_arg	args;
 }	t_px;
 
@@ -50,12 +48,9 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 int		check_arguments(int argc);
 int		save_arguments(char **argv, t_px *pipex);
 
-// init.c
+// init_free.c
 void	init_struct_args(t_arg *args);
-
-// open.c
-void	open_file(t_px *pipex);
-void	free_matrix(t_px *pipex);
+void	free_matrix(char **mtx);
 void	free_pipex(t_px *pipex);
 
 // path.c
