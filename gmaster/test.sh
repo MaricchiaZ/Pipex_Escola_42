@@ -1,6 +1,6 @@
 #Recompilando
 printf "\033[36mCOMPILING PROGRAM\n\033[0m"
-make -C ../ all
+make -C ../ re
 cp ../pipex ./
 
 printf "\n"

@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/22 22:44:31 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/23 11:06:12 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	child_cmd(t_px pipex, char **env)
 	pipex.mtx_cmd = get_cmd(pipex.args.cmd1); // extrai o comando do argumento 3
 	path = get_path(env, pipex.args.cmd1); // pegamos o caminho necessário para rodar o comando
 	//	execve(path, pipex.mtx_cmd, env); // executamos o comando, no caminho, sobre o fd_in e o resultado vai para o fd_out
-	path = get_path(env, pipex.args.cmd2);
 	if (path)
 		execve(path, pipex.mtx_cmd, env); // executamos o comando, no caminho, sobre o fd_in e o resultado vai para o fd_out
 	free(path);
@@ -73,8 +72,7 @@ int	main(int argc, char **argv, char **env)
 	dup2(pipex.fd_out, 1);//fecha a saída do terminal e converte-a para o fd_out
 	if (pipe(pipex.pipefd) == -1) // se a função pipe não funcionar
 		return (-1); // retornamos erro
-	if ((process_id = fork()) == -1) // fork duplica todos os processos a partir daqui, retornando 0 para o processo filho, e > 0 para o processo pai
-		return (-1);// caso o fork não ocorra
+	process_id = fork(); // fork duplica todos os processos a partir daqui, retornando 0 para o processo filho, e > 0 para o processo pai
 	if (process_id == 0) // no processo filho
 		child_cmd(pipex, env); // roda-se o comando 1
 	else // no processo pai

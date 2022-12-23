@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 16:38:44 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/22 20:05:09 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/23 11:02:26 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char    *get_path(char **env, char *cmd)
         i++;
     line = env[i] + 5;
     check = ft_split(line, ':');
-	cmd_name = ft_split(cmd, ' ');
+	  cmd_name = ft_split(cmd, ' ');
     i = 0;
     while (check[i] != NULL)
     {
