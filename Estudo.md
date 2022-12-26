@@ -30,8 +30,7 @@ file1 -> stdin(0) -> comando 1  | comando 2 -> stdout(1) -> file2
 ```
 
 ### Entendendo os conceitos
-Base de estudo: https://www.youtube.com/playlist?list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY
-múltiplas threads:
+Base de estudo: https://www.youtube.com/playlist?list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY \
 múltiplos processos: Um processo (linha de execução de código) acontece duplicado toda vez que usamos um fork, um fork pode ser usado dentro de outro fork. Os processos pai e filho podem atuar diferentemente se as funções chamadas dentro de if que consultem o ID.
 Diferença entre processo e threads:
 
