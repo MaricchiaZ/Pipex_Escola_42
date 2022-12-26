@@ -29,7 +29,7 @@ int	check_arguments(int argc)
 {
 	if (argc != 5)
 	{
-		write(1, "Error\n invalid number of arguments\n", 36);
+		write(1, "Error\ninvalid number of arguments\n", 36);
 		return (0);
 	}
 	return (1);
