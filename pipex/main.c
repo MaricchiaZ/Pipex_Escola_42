@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/23 14:15:33 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:36:11 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **env)
 	int		process_id;
 
 	if (check_arguments(argc) == 0)
-		return (0);
+		return (1);
 	if (save_arguments(argv, &pipex) == 0)
 		return (-1);
 	pipex.fd_out = open(pipex.args.file_out, \

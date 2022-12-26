@@ -6,7 +6,7 @@
 /*   By: maclara- <maclara-@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/19 18:39:01 by maclara-          #+#    #+#             */
-/*   Updated: 2022/12/23 14:10:31 by maclara-         ###   ########.fr       */
+/*   Updated: 2022/12/26 18:53:20 by maclara-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ int	main(int argc, char **argv, char **env)
 	int		process_id; //recebe o retorno da função fork
 	
 	if (check_arguments(argc) == 0) // checa se o número de args é 5
-		return (0);
+		return (1); // avisa o erro
 	if (save_arguments(argv, &pipex) == 0) // salva os argumentos numa struct
-		return (-1);
+		return (-1); // avisa o erro
 	pipex.fd_out = open(pipex.args.file_out, O_CREAT | O_WRONLY | O_TRUNC, 0777); // usa a func open para criar o file_out com permissão de escrita O_WRONLY, se ele não existir préviamente, e se ele existir remove todo o seu conteúdo (Truncate) 
 	dup2(pipex.fd_out, 1);//fecha a saída do terminal e converte-a para o fd_out
 	if (pipe(pipex.pipefd) == -1) // se a função pipe não funcionar
