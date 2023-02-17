@@ -22,19 +22,19 @@ static int	get_cmd_count(char *s)
 	i = 0;
 	while (s[i] != '\0') //     "   tr 'c' e"
 	{
-		while (s[i] == ' ')
-			i++;
-		if ((s[i] == '\'' || s[i] == '\"') && s[i + 1] != '\0')
+		while (s[i] == ' ') // se tiver espaços extras iniciais
+			i++; //avançamos por todos eles
+		if ((s[i] == '\'' || s[i] == '\"') && s[i + 1] != '\0') // se for aspas simples ou duplas (e elas não forem a última coisa da string) 
 		{
-			c = s[i];
-			i++;
-			while (s[i] != c && s[i + 1] != '\0')
-				i++;
-			n++;
+			c = s[i]; // salvamos o tipo de aspa em c
+			i++; // e avançamos
+			while (s[i] != c && s[i + 1] != '\0') // enquanto não encontrarmos a aspa correspondente a sala em c
+				i++; // avançamos
+			n++; // e somamos uma unidade, correspondente ao comando 
 		}
-		else if (s[i] != ' ' && (s[i + 1] == ' ' || s[i + 1] == '\0'))
-			n++;
-		i++;
+		else if (s[i] != ' ' && (s[i + 1] == ' ' || s[i + 1] == '\0')) // se não for espaço, mas o prófimo for..
+			n++;  //somamos uma unidade, correspondente ao comando
+		i++; // e avançamos
 	}
 	return (n);
 }
