@@ -51,7 +51,7 @@ void	parent_cmd(t_px pipex, char **env)
 	// a dup2 fecha o stdin (0), e o pipefd[0] torna-se o novo stdin, agora essa função vai receber os valores do arquivo 1 e não do terminal
 	path = get_path(env, pipex.args.cmd2); // path recebe o caminho para a execussão do comando
 	if (path) // se o caminho existir
-		execve(path, pipex.mtx_cmd, env); // executamos o programa referenciado pelo path. Essa função faz a execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução., de modo que ela executa o comando no caminho 
+		execve(path, pipex.mtx_cmd, env); // executamos o programa referenciado pelo path. Essa função faz a execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução., de modo que ela executa o comando no caminho // O código do processo que chama uma função exec() será sempre destruído, e desta forma, não existe muito sentido em utilizá-la sem que ela esteja associada a uma primitiva fork(). AQUI TEM EXEMPLOS : https://www.dca.ufrn.br/~adelardo/cursos/DCA409/node39.html
 	free(path); //limpamos a string path
 	free_matrix(pipex.mtx_cmd); // limpamos o ponteiro de ponteiri (matriz) dos comandos
 	free_pipex(&pipex); // limpamos a struct pipex
