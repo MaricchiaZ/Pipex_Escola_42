@@ -48,7 +48,7 @@ void	parent_cmd(t_px pipex, char **env)
 	close(pipex.pipefd[1]); // pipefd[1] - write // sempre feche a extremidade do pipe que voce não usa, se ficar aberta a outra extremidade ficará aguardando algum tipo de entrada e o processo não se finalizará
 	pipex.mtx_cmd = get_cmd(pipex.args.cmd2);
 	dup2(pipex.pipefd[0], 0); //pipefd[0] - read // a dup2 - int dup2(int fd1, int fd2) pode trocar os fds para stdin/stdout (essa func fecha o fd2, e duplica o conteúdo dele para o fd1, ou seja redireciona o fd1 para o fd2, limpando o fd1 sem deixar vazar os leaks)
-	// a dup2 fecha o stdin (0), e o pipefd[0] torna-se o novo stdin, agora essa função vai receber os valores do arquivo 1 e não do terminal
+	// a dup2 fecha o stdin (0), e o pipefd[0] torna-se o novo stdin, agora essa função vai receber os valores do pipe_fd[0] e não do terminal
 	path = get_path(env, pipex.args.cmd2); // path recebe o caminho para a execussão do comando
 	if (path) // se o caminho existir
 		execve(path, pipex.mtx_cmd, env); // executamos o programa referenciado pelo path. Essa função faz a execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução., de modo que ela executa o comando no caminho // O código do processo que chama uma função exec() será sempre destruído, e desta forma, não existe muito sentido em utilizá-la sem que ela esteja associada a uma primitiva fork(). AQUI TEM EXEMPLOS : https://www.dca.ufrn.br/~adelardo/cursos/DCA409/node39.html
