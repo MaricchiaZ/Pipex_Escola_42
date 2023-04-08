@@ -79,9 +79,11 @@ Em programação, um processo é uma instância de um programa em execução em 
 Os comandos shell são instruções ou programas que podem ser executados em um ambiente de linha de comando ou terminal de um sistema operacional. Eles permitem que o usuário interaja com o sistema operacional e realizem tarefas, como navegar pelos diretórios, gerenciar arquivos, executar programas, manipular dados e configurar o ambiente do usuário. No geral, um comando é independente de outro comando.
 
 ![Pipex](./img/sem_pipes.PNG)
+
 A função pipe faz a comunicação entre os dois processos, encaminhando a saída de um para a entrada do outro.
 
 ![Pipe](./img/pipe.PNG)
+
 O redirecionamento da saída de um comando para a entrada do próximo, faz com que o segundo comando opere sobre os dados fornecidos pela execussão do primeiro comando, e forneca um resultado a partir desses dados.
 
 A função fork() é um system call capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai, e é uma técnica para poder dividir o trabalho. O fluxo é ramificado após a execução do fork, e é possível distiguir qual processo é qual pelo PID retornado a função fork. O processo filho tem o PID = 0, já o processo pai tem o PID = int < 0 (qualquer int maior que zero).
