@@ -60,6 +60,8 @@ a dup2 fecha o stdout(1), e o pipefd[1] torna-se o novo stdout... ou seja o coma
 `Função execv`: executa o programa referenciado pelo path. Essa função faz com que o programa que está sendo executado atualmente pelo no processo seja substituído por um novo programa, recém-inicializado. \
 A família de funções exec permite o lançamento da execução de um programa externo ao processo. Não existe a criação efetiva de um novo processo, mas simplesmente uma substituição do programa de execução.\
 Existem seis funções primitivas na família, as quais podem ser divididas em dois grupos: os execl(), para o qual o número de argumentos do programa lançado é conhecido; e os execv(), para o qual esse número é desconhecido. Em outras palavras, estes grupos  se diferenciam pelo número de parâmetros passados.
+*O código do processo que chama uma função exec() será sempre destruído, e desta forma, não existe muito sentido em utilizá-la sem que ela esteja associada a uma primitiva fork().*
+AQUI TEM EXEMPLOS : https://www.dca.ufrn.br/~adelardo/cursos/DCA409/node39.html
 
 `Argumento env` passado por parâmetro para a main: env é um vetor de strings (char *env) na forma "nome=valor" que contém as `variáveis de ambiente` do shell que lançou a execução do programa (também finalizado por um ponteiro nulo). As variáveis de ambiente são cadeias de caracteres que contêm informações sobre o ambiente do sistema e sobre o usuário que está no momento conectado. Alguns programas de software usam as informações para determinar onde colocar arquivos (como por exemplo, os arquivos temporários).\
 Uma variável de ambiente é um atalho (chamemos assim) para um valor que neste caso está disponível no ambiente de execução (neste caso no sistema operacional inteiro).
@@ -68,3 +70,36 @@ Uma variável de ambiente é um atalho (chamemos assim) para um valor que neste 
 
 `Função acess`: A função acces `int access(const char * pathname , int mode )` verifica se o processo de chamada pode acessar o arquivo pathname. O modo especifica a(s) verificação(ões) de acessibilidade a serem executadas. Os testes F_OK verificam a existência do arquivo. Já os testes R_OK , W_OK e X_OK, além da existencia, testam se o concede permissões de leitura, gravação e execução respectivamente.
 
+### Processos
+
+Em programação, um processo é uma instância de um programa em execução em um sistema operacional. Cada processo tem sua própria memória e espaço de endereçamento, e é geralmente executado em seu próprio ambiente isolado. Os processos geralmente interagem com outros processos através de mecanismos definidos pelo sistema operacional, como sinais, pipes e sockets. Nos sistemas operacionais tais como Windows e Linux muitos dos seus recursos operam sobre a forma de processos.
+
+### Conectando os conceitos
+
+Os comandos shell são instruções ou programas que podem ser executados em um ambiente de linha de comando ou terminal de um sistema operacional. Eles permitem que o usuário interaja com o sistema operacional e realizem tarefas, como navegar pelos diretórios, gerenciar arquivos, executar programas, manipular dados e configurar o ambiente do usuário. No geral, um comando é independente de outro comando.
+
+![Pipex](./img/sem_pipe.PNG)
+A função pipe faz a comunicação entre os dois processos, encaminhando a saída de um para a entrada do outro.
+
+![Pipe](./img/pipe.PNG)
+O redirecionamento da saída de um comando para a entrada do próximo, faz com que o segundo comando opere sobre os dados fornecidos pela execussão do primeiro comando, e forneca um resultado a partir desses dados.
+
+A função fork() é um system call capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai, e é uma técnica para poder dividir o trabalho. O fluxo é ramificado após a execução do fork, e é possível distiguir qual processo é qual pelo PID retornado a função fork. O processo filho tem o PID = 0, já o processo pai tem o PID = int < 0 (qualquer int maior que zero).
+
+![Função fork](./img/fork.PNG)
+
+JUNTANDO O FORK COM A PIPE
+
+Um programa com fork e pipe cria um novo processo, processo filho, usando a função fork() do sistema operacional. Esse processo filho é uma cópia exata do processo pai, mas com um identificador de processo (PID) diferente, e esse processo filho pode executar tarefas diferentes do processo pai.
+
+O processo filho pode então redirecionar sua saída padrão (stdout) para uma pipe usando a função pipe() do sistema operacional. A pipe é um mecanismo de comunicação que permite que o processo filho envie dados para o processo pai. O processo pai pode ler a saída do processo filho a partir da pipe usando a função read() do sistema operacional. Os dados lidos pelo processo pai podem então ser processados ​​ou exibidos na saída padrão do processo pai.
+
+Em resumo, a comunicação entre o processo filho e o processo pai é realizada através de uma pipe, que conecta a saída do processo filho à entrada do processo pai. O uso do fork e da pipe permite que o processo filho execute tarefas diferentes do processo pai e que a saída do processo filho seja lida e processada pelo processo pai.
+
+![Função fork mais pipe](./img/fork+pipe.PNG)
+
+Além de tudo isso, podemos usar um file_in de entrada para a execução do comando1(no processo filho), redirecionar a saída dessa execussão, pela pipe, para o comando2(no processo pai), e colocar a saída desse segundo processo no file_out. 
+
+![Função fork mais pipe, agora usando file_in e file_our](./img/fork+pipe+file.PNG)
+
+Essa imagem resume a arquitetura do meu projeto Pipex (existem muitas outras maneiras de fazer, e certamente outras serão até melhores). 
