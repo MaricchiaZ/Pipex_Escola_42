@@ -78,7 +78,7 @@ Em programação, um processo é uma instância de um programa em execução em 
 
 Os comandos shell são instruções ou programas que podem ser executados em um ambiente de linha de comando ou terminal de um sistema operacional. Eles permitem que o usuário interaja com o sistema operacional e realizem tarefas, como navegar pelos diretórios, gerenciar arquivos, executar programas, manipular dados e configurar o ambiente do usuário. No geral, um comando é independente de outro comando.
 
-![Pipex](./img/sem_pipe.PNG)
+![Pipex](./img/sem_pipes.PNG)
 A função pipe faz a comunicação entre os dois processos, encaminhando a saída de um para a entrada do outro.
 
 ![Pipe](./img/pipe.PNG)
